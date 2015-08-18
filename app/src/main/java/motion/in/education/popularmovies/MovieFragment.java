@@ -120,8 +120,7 @@ public class MovieFragment extends Fragment {
                   .authority("api.themoviedb.org")
                   .appendPath("3")
                   .appendPath("discover")
-                  .appendPath("movie")
-                  .appendPath("550");
+                  .appendPath("movie");
 
             uriBuilder.appendQueryParameter("api_key", "");
             //uriBuilder.appendQueryParameter("callback", "JSON");
