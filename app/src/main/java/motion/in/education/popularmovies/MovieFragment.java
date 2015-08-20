@@ -1,6 +1,5 @@
 package motion.in.education.popularmovies;
 
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +28,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -27,9 +36,8 @@ import java.util.ArrayList;
  */
 public class MovieFragment extends Fragment {
 
-   ArrayAdapter<Image> movieThumbnailAdapter;
-
    GridView gridView;
+   ImageAdapter movieAdapter;
 
    public MovieFragment() {
    }
@@ -51,15 +59,18 @@ public class MovieFragment extends Fragment {
 
       View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-      movieThumbnailAdapter = new ArrayAdapter<>(
+      movieAdapter = new ImageAdapter(
             getActivity(),
             R.layout.grid_item_movie,
             R.id.grid_item_movie_imageview,
-            new ArrayList<Image>()
+            new ArrayList<Movie>()
       );
+      //movieAdapter = new ImageAdapter(getActivity());
+
+      movieAdapter.notifyDataSetChanged();
 
       gridView = (GridView) rootView.findViewById(R.id.gridview_movies);
-      gridView.setAdapter(movieThumbnailAdapter);
+      gridView.setAdapter(movieAdapter);
       gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -75,9 +86,32 @@ public class MovieFragment extends Fragment {
       fetchMovies.execute("popularity");
    }
 
-   public class FetchMovieTask extends AsyncTask<String, Void, Void>{
+   public class FetchMovieTask extends AsyncTask<String, Void, Movie[]>{
 
       private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
+
+      /**
+       * <p>Runs on the UI thread after {@link #doInBackground}. The
+       * specified result is the value returned by {@link #doInBackground}.</p>
+       * <p/>
+       * <p>This method won't be invoked if the task was cancelled.</p>
+       *
+       * @param movies The result of the operation computed by {@link #doInBackground}.
+       * @see #onPreExecute
+       * @see #doInBackground
+       * @see #onCancelled(Object)
+       */
+      @Override
+      protected void onPostExecute(Movie[] movies) {
+         super.onPostExecute(movies);
+
+         Log.v("***addAll movies", String.valueOf(movies.length));
+         movieAdapter.clear();
+         for(int i = 0; i < movies.length; i++) {
+            movieAdapter.add(movies[i]);
+         }
+
+      }
 
       /**
        * Override this method to perform a computation on a background thread. The
@@ -94,7 +128,7 @@ public class MovieFragment extends Fragment {
        * @see #publishProgress
        */
       @Override
-      protected Void doInBackground(String... params) {
+      protected Movie[] doInBackground(String... params) {
 
          if(params.length == 0){
             return null;
@@ -186,7 +220,46 @@ public class MovieFragment extends Fragment {
             }
          }
 
-         return null;
+         try{
+            return getMoviesFromJson(movieJsonStr);
+         }
+         catch(JSONException e){
+            e.printStackTrace();
+            return null;
+         }
+      }
+
+      private Movie[] getMoviesFromJson(String movieJsonStr)
+         throws JSONException {
+
+         Movie[] movies;
+
+         final String TMDB_RESULTS = "results";
+
+         final String TMDB_TITLE = "original_title";
+         final String TMDB_POSTER_PATH = "poster_path";
+         final String TMDB_OVERVIEW = "overview";
+         final String TMDB_RELEASE_DATE = "release_date";
+         final String TMDB_USER_RATING = "vote_average";
+         final String TMDB_POPULARITY = "popularity";
+
+         JSONObject movieJson = new JSONObject(movieJsonStr);
+         JSONArray movieArray = movieJson.getJSONArray(TMDB_RESULTS);
+
+         movies = new Movie[movieArray.length()];
+
+         for(int i = 0; i < movieArray.length(); i++){
+            //Movie movie = new Movie();
+            movies[i] = new Movie();
+            movies[i].setTitle(movieArray.getJSONObject(i).getString(TMDB_TITLE));
+            movies[i].setOverview(movieArray.getJSONObject(i).getString(TMDB_OVERVIEW));
+            movies[i].setReleaseDate(movieArray.getJSONObject(i).getString(TMDB_RELEASE_DATE));
+            movies[i].setUserRating(movieArray.getJSONObject(i).getString(TMDB_USER_RATING));
+            movies[i].setPopularity(movieArray.getJSONObject(i).getString(TMDB_POPULARITY));
+            movies[i].setPosterPath("http://image.tmdb.org/t/p/w500" + movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH));
+         }
+
+         return movies;
       }
    }
 

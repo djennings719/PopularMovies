@@ -1,5 +1,6 @@
 package motion.in.education.popularmovies;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 import java.util.Date;
@@ -9,10 +10,12 @@ import java.util.Date;
  */
 public class Movie {
 
+   public Movie(){}
+
    public Movie(String title,
-                Image thumbnail,
+                Bitmap thumbnail,
                 String overview,
-                Date releaseDate,
+                String releaseDate,
                 String userRating){
 
       this.title = title;
@@ -28,25 +31,48 @@ public class Movie {
     */
    private String title;
 
-   public void setTitle(){
-
+   public void setTitle(String title){
+      this.title = title;
    }
 
    public String getTitle(){
       return title;
    }
 
-   Image thumbnail;
+   /**
+    *
+    */
+   Bitmap thumbnail;
 
-   public void setThumbnail(){}
+   public void setThumbnail(Bitmap thumbnail){
+      this.thumbnail = thumbnail;
+   }
 
-   public Image getThumbnail(){
+   public Bitmap getThumbnail(){
       return thumbnail;
    }
 
+   /**
+    *
+    */
+   String posterPath;
+
+   public void setPosterPath(String posterPath){
+      this.posterPath = posterPath;
+   }
+
+   public String getPosterPath(){
+      return posterPath;
+   }
+
+   /**
+    *
+    */
    String overview;
 
-   public void setOverview(){}
+   public void setOverview(String overview){
+      this.overview = overview;
+   }
 
    public String getOverview(){
       return overview;
@@ -54,18 +80,32 @@ public class Movie {
 
    String userRating;
 
-   public void setUserRating(){}
+   public void setUserRating(String userRating){
+      this.userRating = userRating;
+   }
 
    public String getUserRating(){
       return userRating;
    }
 
-   Date releaseDate;
+   String releaseDate;
 
-   public void setReleaseDate(){}
+   public void setReleaseDate(String releaseDate){
+      this.releaseDate = releaseDate;
+   }
 
-   public Date getReleaseDate(){
+   public String getReleaseDate(){
       return releaseDate;
+   }
+
+   String popularity;
+
+   public void setPopularity(String popularity){
+      this.popularity = popularity;
+   }
+
+   public String getPopularity (){
+      return this.popularity;
    }
 
 }

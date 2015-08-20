@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -11,6 +11,15 @@
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/gridview_movies"/>
+        android:id="@+id/gridview_movies"
+        android:columnWidth="190sp"
+        android:numColumns="@integer/movie_columns"
 
-</FrameLayout>
+        android:verticalSpacing="10sp"
+        android:horizontalSpacing="10sp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+
+        />
+
+</LinearLayout>
