@@ -1,25 +1,25 @@
 package motion.in.education.popularmovies;
 
-import android.graphics.Bitmap;
-import android.media.Image;
-
-import java.util.Date;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Daniel on 8/18/2015.
  */
-public class Movie {
+public class Movie implements Parcelable{
+
+   private int mData;
 
    public Movie(){}
 
    public Movie(String title,
-                Bitmap thumbnail,
+
                 String overview,
                 String releaseDate,
                 String userRating){
 
       this.title = title;
-      this.thumbnail = thumbnail;
+
       this.overview = overview;
       this.releaseDate = releaseDate;
       this.userRating = userRating;
@@ -38,20 +38,7 @@ public class Movie {
    public String getTitle(){
       return title;
    }
-
-   /**
-    *
-    */
-   Bitmap thumbnail;
-
-   public void setThumbnail(Bitmap thumbnail){
-      this.thumbnail = thumbnail;
-   }
-
-   public Bitmap getThumbnail(){
-      return thumbnail;
-   }
-
+   
    /**
     *
     */
@@ -78,6 +65,9 @@ public class Movie {
       return overview;
    }
 
+   /**
+    *
+    */
    String userRating;
 
    public void setUserRating(String userRating){
@@ -88,6 +78,9 @@ public class Movie {
       return userRating;
    }
 
+   /**
+    *
+    */
    String releaseDate;
 
    public void setReleaseDate(String releaseDate){
@@ -98,6 +91,9 @@ public class Movie {
       return releaseDate;
    }
 
+   /**
+    *
+    */
    String popularity;
 
    public void setPopularity(String popularity){
@@ -108,4 +104,39 @@ public class Movie {
       return this.popularity;
    }
 
+   @Override
+   public int describeContents() {
+      return 0;
+   }
+
+   @Override
+   public void writeToParcel(Parcel dest, int flags) {
+      dest.writeInt(this.mData);
+      dest.writeString(this.title);
+      dest.writeString(this.posterPath);
+      dest.writeString(this.overview);
+      dest.writeString(this.userRating);
+      dest.writeString(this.releaseDate);
+      dest.writeString(this.popularity);
+   }
+
+   protected Movie(Parcel in) {
+      this.mData = in.readInt();
+      this.title = in.readString();
+      this.posterPath = in.readString();
+      this.overview = in.readString();
+      this.userRating = in.readString();
+      this.releaseDate = in.readString();
+      this.popularity = in.readString();
+   }
+
+   public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+      public Movie createFromParcel(Parcel source) {
+         return new Movie(source);
+      }
+
+      public Movie[] newArray(int size) {
+         return new Movie[size];
+      }
+   };
 }

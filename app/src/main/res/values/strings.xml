@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="hello_world">Hello world!</string>
+
     <string name="action_settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="detail_content_description">thumbnail</string>
+
+    <string name="pref_sort_method_key">sort_by_key</string>
+    <string name="pref_sort_method_title">Sort By:</string>
+    <string name="pref_sort_method_default">popularity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

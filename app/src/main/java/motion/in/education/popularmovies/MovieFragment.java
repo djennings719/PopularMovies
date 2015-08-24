@@ -1,5 +1,6 @@
 package motion.in.education.popularmovies;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -74,7 +75,11 @@ public class MovieFragment extends Fragment {
       gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Movie movie = (Movie) movieAdapter.getItem(position);
+            Intent movieDetailIntent = new Intent(getActivity(), DetailActivity.class)
+                  .putExtra("movieDetails", movie);
 
+            startActivity(movieDetailIntent);
          }
       });
 
@@ -109,8 +114,8 @@ public class MovieFragment extends Fragment {
          movieAdapter.clear();
          for(int i = 0; i < movies.length; i++) {
             movieAdapter.add(movies[i]);
+            movieAdapter.notifyDataSetChanged();
          }
-
       }
 
       /**

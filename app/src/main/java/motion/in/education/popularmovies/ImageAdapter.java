@@ -42,6 +42,7 @@ public class ImageAdapter extends BaseAdapter {
    public void add(Movie movie){
 
       mObjects.add(movie);
+
    }
 
    /*public void addAll(List<Movie> movies){
@@ -110,9 +111,9 @@ public class ImageAdapter extends BaseAdapter {
 
       if (imageView == null) {
          imageView = new ImageView(mContext);
-         imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+         //imageView.setLayoutParams(new GridView.LayoutParams(185, 185));
          imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-         imageView.setPadding(8, 8, 8, 8);
+         //imageView.setPadding(8, 8, 8, 8);
          Log.v("getView - base is null-", "convertView is null - do not read from it");
       }
 
@@ -120,10 +121,18 @@ public class ImageAdapter extends BaseAdapter {
 
       Picasso.with(mContext).load(movie.getPosterPath())
             .placeholder(R.drawable.placeholder)
-
             .into(imageView);
       Log.v("***getView***", imageView.toString());
       return imageView;
+   }
+
+   /**
+    * Notifies the attached observers that the underlying data has been changed
+    * and any View reflecting the data set should refresh itself.
+    */
+   @Override
+   public void notifyDataSetChanged() {
+      super.notifyDataSetChanged();
    }
 
    public void clear() {
