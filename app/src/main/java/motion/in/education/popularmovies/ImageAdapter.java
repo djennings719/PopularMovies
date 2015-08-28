@@ -35,24 +35,11 @@ public class ImageAdapter extends BaseAdapter {
       mFieldId = textViewResourceId;
    }
 
- /*  public ImageAdapter (Context context){
-      this.mContext = context;
-   }*/
-
    public void add(Movie movie){
 
       mObjects.add(movie);
 
    }
-
-   /*public void addAll(List<Movie> movies){
-      if(movies == null) {
-         Log.v("*addAll objects is null", "it be null");
-         return;
-      }
-
-      Collections.addAll(this.mObjects, movies);
-   }*/
 
    /**
     * How many items are in the data set represented by this Adapter.
@@ -111,10 +98,7 @@ public class ImageAdapter extends BaseAdapter {
 
       if (imageView == null) {
          imageView = new ImageView(mContext);
-         //imageView.setLayoutParams(new GridView.LayoutParams(185, 185));
          imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-         //imageView.setPadding(8, 8, 8, 8);
-         Log.v("getView - base is null-", "convertView is null - do not read from it");
       }
 
       Movie movie = (Movie) getItem(position);
@@ -122,7 +106,7 @@ public class ImageAdapter extends BaseAdapter {
       Picasso.with(mContext).load(movie.getPosterPath())
             .placeholder(R.drawable.placeholder)
             .into(imageView);
-      Log.v("***getView***", imageView.toString());
+
       return imageView;
    }
 

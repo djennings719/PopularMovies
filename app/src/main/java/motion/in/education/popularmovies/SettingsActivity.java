@@ -63,8 +63,6 @@ public class SettingsActivity extends PreferenceActivity
       } else {
          // For other preferences, set the summary to the value's simple string representation.
          preference.setSummary(stringValue);
-         Log.v("**onPrefChanged-String ", stringValue);
-         Log.v("**Summary afterSet", (String) preference.getSummary());
       }
       return true;
    }

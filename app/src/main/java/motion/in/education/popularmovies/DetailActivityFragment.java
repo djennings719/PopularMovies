@@ -51,28 +51,11 @@ public class DetailActivityFragment extends Fragment {
 
       ListView listView = (ListView) rootView.findViewById(R.id.listView_movie_details);
 
-
       detailsAdapter.add(movie.getReleaseDate());
       detailsAdapter.add(movie.getUserRating());
       detailsAdapter.add(movie.getOverview());
 
       listView.setAdapter(detailsAdapter);
-
-      /*TextView releaseDateTextView = (TextView) rootView.findViewById(R.id.release_date);
-      releaseDateTextView.setText(movie.getReleaseDate());
-
-      TextView userRatingTextView = (TextView) rootView.findViewById(R.id.user_rating);
-      userRatingTextView.setText(movie.getUserRating());
-
-      TextView overviewTextView = (TextView) rootView.findViewById(R.id.overview);
-      overviewTextView.setText(movie.getOverview());*/
-
-
-      //TextView titleView = inflater.inflate(android.R.id)
-
-      Log.v("***Detail Activity", movie.getTitle());
-
-
 
       return rootView;
    }

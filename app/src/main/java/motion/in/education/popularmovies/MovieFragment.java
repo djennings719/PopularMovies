@@ -88,7 +88,6 @@ public class MovieFragment extends Fragment {
    }
 
    private void updateMovies(){
-      Log.v("stored string", getSelectionSetting());
       FetchMovieTask fetchMovies = new FetchMovieTask();
       fetchMovies.execute(getSelectionSetting());
    }
@@ -118,7 +117,6 @@ public class MovieFragment extends Fragment {
       protected void onPostExecute(Movie[] movies) {
          super.onPostExecute(movies);
 
-//         Log.v("***addAll movies", String.valueOf(movies.length));
          movieAdapter.clear();
          for(int i = 0; i < movies.length; i++) {
             movieAdapter.add(movies[i]);
@@ -133,6 +131,9 @@ public class MovieFragment extends Fragment {
        * <p/>
        * This method can call {@link #publishProgress} to publish updates
        * on the UI thread.
+       *
+       * The boiler plate code in this method was taken from Udacity Sunshine
+       * github page and modified to fit TMDB
        *
        * @param params The parameters of the task.
        * @return A result, defined by the subclass of this task.
@@ -157,9 +158,8 @@ public class MovieFragment extends Fragment {
 
          try {
             // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are avaiable at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
-            //URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
+            // Possible parameters are avaiable at TMDB's movie API page, at
+            // https://www.themoviedb.org/documentation/api
 
             Uri.Builder uriBuilder = new Uri.Builder();
 
@@ -185,7 +185,7 @@ public class MovieFragment extends Fragment {
 
             URL url = new URL(uriBuilder.build().toString());
 
-            // Create the request to OpenWeatherMap, and open the connection
+            // Create the request to TMDB, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
