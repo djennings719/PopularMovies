@@ -7,10 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 
 /**
@@ -29,6 +33,13 @@ public class DetailActivityFragment extends Fragment {
 
       View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+      ArrayAdapter<String> detailsAdapter = new ArrayAdapter<String>(
+            getActivity(),
+            R.layout.list_item_movie_details,
+            R.id.list_item_movie_details,
+            new ArrayList<String>()
+      );
+
       Intent intent = getActivity().getIntent();
       movie = intent.getParcelableExtra("movieDetails");
 
@@ -38,7 +49,14 @@ public class DetailActivityFragment extends Fragment {
       ImageView thumbnailImageView = (ImageView) rootView.findViewById(R.id.image_view_thumbnail);
       Picasso.with(getActivity().getApplication()).load(movie.getPosterPath()).into(thumbnailImageView);
 
+      ListView listView = (ListView) rootView.findViewById(R.id.listView_movie_details);
 
+
+      detailsAdapter.add(movie.getReleaseDate());
+      detailsAdapter.add(movie.getUserRating());
+      detailsAdapter.add(movie.getOverview());
+
+      listView.setAdapter(detailsAdapter);
 
       /*TextView releaseDateTextView = (TextView) rootView.findViewById(R.id.release_date);
       releaseDateTextView.setText(movie.getReleaseDate());

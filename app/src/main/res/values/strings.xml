@@ -9,6 +9,4 @@
     <string name="pref_sort_method_title">Sort By:</string>
     <string name="pref_sort_method_default">popularity</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-    <string name="hello_world">Hello world!</string>
 </resources>

@@ -3,6 +3,7 @@ package motion.in.education.popularmovies;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -87,8 +88,15 @@ public class MovieFragment extends Fragment {
    }
 
    private void updateMovies(){
+      Log.v("stored string", getSelectionSetting());
       FetchMovieTask fetchMovies = new FetchMovieTask();
-      fetchMovies.execute("popularity");
+      fetchMovies.execute(getSelectionSetting());
+   }
+
+   private String getSelectionSetting() {
+      return PreferenceManager.getDefaultSharedPreferences(getActivity())
+            .getString(getString(R.string.pref_sort_method_key),
+                  getString(R.string.pref_sort_method_default));
    }
 
    public class FetchMovieTask extends AsyncTask<String, Void, Movie[]>{
@@ -110,7 +118,7 @@ public class MovieFragment extends Fragment {
       protected void onPostExecute(Movie[] movies) {
          super.onPostExecute(movies);
 
-         Log.v("***addAll movies", String.valueOf(movies.length));
+//         Log.v("***addAll movies", String.valueOf(movies.length));
          movieAdapter.clear();
          for(int i = 0; i < movies.length; i++) {
             movieAdapter.add(movies[i]);
@@ -162,7 +170,6 @@ public class MovieFragment extends Fragment {
                   .appendPath("movie");
 
             uriBuilder.appendQueryParameter("api_key", "");
-            //uriBuilder.appendQueryParameter("callback", "JSON");
 
             switch(params[0]){
 

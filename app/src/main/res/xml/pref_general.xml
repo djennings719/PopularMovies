@@ -25,8 +25,8 @@
         android:key="@string/pref_sort_method_key"
         android:title="@string/pref_sort_method_title"
         android:defaultValue="@string/pref_sort_method_default"
-        android:entries="@array/pref_sort_options"
-        android:entryValues="@array/pref_sort_options"
+        android:entries="@array/pref_sort_entries"
+        android:entryValues="@array/pref_sort_values"
          />
 
 </PreferenceScreen>
