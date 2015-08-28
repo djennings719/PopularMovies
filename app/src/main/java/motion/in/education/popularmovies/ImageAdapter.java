@@ -104,7 +104,6 @@ public class ImageAdapter extends BaseAdapter {
       Movie movie = (Movie) getItem(position);
 
       Picasso.with(mContext).load(movie.getPosterPath())
-            .placeholder(R.drawable.placeholder)
             .into(imageView);
 
       return imageView;
