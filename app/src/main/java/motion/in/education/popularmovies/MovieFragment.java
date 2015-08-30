@@ -1,8 +1,13 @@
 package motion.in.education.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -11,13 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
-
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,8 +30,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * A placeholder fragment containing a simple view.
@@ -40,6 +38,8 @@ public class MovieFragment extends Fragment {
 
    GridView gridView;
    ImageAdapter movieAdapter;
+   ArrayList<Movie> movieList;
+   String currentSearchOption;
 
    public MovieFragment() {
    }
@@ -52,12 +52,58 @@ public class MovieFragment extends Fragment {
    @Override
    public void onStart() {
       super.onStart();
-      updateMovies();
+   }
+
+   /**
+    * Called to ask the fragment to save its current dynamic state, so it
+    * can later be reconstructed in a new instance of its process is
+    * restarted.  If a new instance of the fragment later needs to be
+    * created, the data you place in the Bundle here will be available
+    * in the Bundle given to {@link #onCreate(Bundle)},
+    * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, and
+    * {@link #onActivityCreated(Bundle)}.
+    * <p/>
+    * <p>This corresponds to {@link Activity#onSaveInstanceState(Bundle)
+    * Activity.onSaveInstanceState(Bundle)} and most of the discussion there
+    * applies here as well.  Note however: <em>this method may be called
+    * at any time before {@link #onDestroy()}</em>.  There are many situations
+    * where a fragment may be mostly torn down (such as when placed on the
+    * back stack with no UI showing), but its state will not be saved until
+    * its owning activity actually needs to save its state.
+    *
+    * @param outState Bundle in which to place your saved state.
+    */
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      outState.putParcelableArrayList("MOVIE_KEY", movieList);
+      outState.putString("SEARCH_KEY", this.currentSearchOption);
+
+      super.onSaveInstanceState(outState);
+   }
+
+   /**
+    * Called when the fragment is visible to the user and actively running.
+    * This is generally
+    * tied to {@link Activity#onResume() Activity.onResume} of the containing
+    * Activity's lifecycle.
+    */
+   @Override
+   public void onResume() {
+      super.onResume();
+      if(!this.getSelectionSetting().equalsIgnoreCase(this.currentSearchOption)){
+         updateMovies();
+      }
+   }
+
+   @Override
+   public void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
    }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                             Bundle savedInstanceState) {
+      movieList = new ArrayList<>();
 
       View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -67,7 +113,15 @@ public class MovieFragment extends Fragment {
             R.id.grid_item_movie_imageview,
             new ArrayList<Movie>()
       );
-      //movieAdapter = new ImageAdapter(getActivity());
+
+      if(savedInstanceState != null){
+         movieList.addAll(savedInstanceState.<Movie>getParcelableArrayList("MOVIE_KEY"));
+         movieAdapter.addAll(movieList);
+         this.currentSearchOption = savedInstanceState.getString("SEARCH_KEY");
+      }
+      else{
+         updateMovies();
+      }
 
       movieAdapter.notifyDataSetChanged();
 
@@ -88,7 +142,17 @@ public class MovieFragment extends Fragment {
    }
 
    private void updateMovies(){
+      if(!isNetworkAvailable()){
+         Context context = getActivity().getApplicationContext();
+         CharSequence text = getActivity().getText(R.string.network_unavailale_message);
+         int duration = Toast.LENGTH_LONG;
+
+         Toast toast = Toast.makeText(context, text, duration);
+         toast.show();
+         return;
+      }
       FetchMovieTask fetchMovies = new FetchMovieTask();
+      this.currentSearchOption = getSelectionSetting();
       fetchMovies.execute(getSelectionSetting());
    }
 
@@ -96,6 +160,14 @@ public class MovieFragment extends Fragment {
       return PreferenceManager.getDefaultSharedPreferences(getActivity())
             .getString(getString(R.string.pref_sort_method_key),
                   getString(R.string.pref_sort_method_default));
+   }
+
+   //Based on a stackoverflow snippet & performance recommendation
+   private boolean isNetworkAvailable() {
+      ConnectivityManager connectivityManager
+            = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+      return activeNetworkInfo != null && activeNetworkInfo.isConnected();
    }
 
    public class FetchMovieTask extends AsyncTask<String, Void, Movie[]>{
@@ -118,10 +190,13 @@ public class MovieFragment extends Fragment {
          super.onPostExecute(movies);
 
          movieAdapter.clear();
+         movieList.clear();
          for(int i = 0; i < movies.length; i++) {
             movieAdapter.add(movies[i]);
-            movieAdapter.notifyDataSetChanged();
+            movieList.add(movies[i]);
          }
+         movieAdapter.notifyDataSetChanged();
+
       }
 
       /**

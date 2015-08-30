@@ -9,4 +9,6 @@
     <string name="pref_sort_method_title">Sort By:</string>
     <string name="pref_sort_method_default">popularity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="save_movie_state">movie_state</string>
+    <string name="network_unavailale_message">No network resource is currently available</string>
 </resources>

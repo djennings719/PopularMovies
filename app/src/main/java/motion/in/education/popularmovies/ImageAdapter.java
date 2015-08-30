@@ -1,6 +1,8 @@
 package motion.in.education.popularmovies;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,8 +28,6 @@ public class ImageAdapter extends BaseAdapter {
    private final int mFieldId;
    private Context mContext;
 
-
-
    public ImageAdapter (Context context, int resource, int textViewResourceId, List<Movie> objects ){
       mContext = context;
       mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -36,9 +37,7 @@ public class ImageAdapter extends BaseAdapter {
    }
 
    public void add(Movie movie){
-
       mObjects.add(movie);
-
    }
 
    /**
@@ -74,6 +73,10 @@ public class ImageAdapter extends BaseAdapter {
       return 0;
    }
 
+   public List<Movie> getAll(){
+      return this.mObjects;
+   }
+
    /**
     * Get a View that displays the data at the specified position in the data set. You can either
     * create a View manually or inflate it from an XML layout file. When the View is inflated, the
@@ -105,7 +108,6 @@ public class ImageAdapter extends BaseAdapter {
 
       Picasso.with(mContext).load(movie.getPosterPath())
             .into(imageView);
-
       return imageView;
    }
 
@@ -120,5 +122,11 @@ public class ImageAdapter extends BaseAdapter {
 
    public void clear() {
       this.mObjects.clear();
+   }
+
+   public void addAll(ArrayList<Movie> movie_key) {
+      for(int i = 0; i < movie_key.size(); i++){
+         this.mObjects.add(movie_key.get(i));
+      }
    }
 }
