@@ -1,3 +1,3 @@
 An API key is required to query the TMDB website successfully.  This key can be acquired by signing up for an account at
 https://www.themoviedb.org/account/signup.  Once you have the account a key should be provided which should be used at 
-line 172 of MovieFragment.java.
+line 247 of MovieFragment.java.
